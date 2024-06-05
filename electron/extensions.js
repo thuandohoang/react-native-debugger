@@ -8,11 +8,14 @@ export default async () => {
       { allowFileAccess: true },
     )
     await session.defaultSession.loadExtension(
-      path.join(
-        __dirname,
-        '../node_modules/apollo-client-devtools/build',
-      ),
+      path.join(__dirname, '../node_modules/apollo-client-devtools/build'),
       { allowFileAccess: true },
+    )
+    await session.defaultSession.loadExtension(
+      path.join(__dirname, '../node_modules/graphql-network-inspector/build'),
+      {
+        allowFileAccess: true,
+      },
     )
   } else if (process.env.PACKAGE === 'no') {
     await session.defaultSession.loadExtension(
@@ -20,11 +23,14 @@ export default async () => {
       { allowFileAccess: true },
     )
     await session.defaultSession.loadExtension(
-      path.join(
-        __dirname,
-        'node_modules/apollo-client-devtools/build',
-      ),
+      path.join(__dirname, 'node_modules/apollo-client-devtools'),
       { allowFileAccess: true },
+    )
+    await session.defaultSession.loadExtension(
+      path.join(__dirname, '../node_modules/graphql-network-inspector/build'),
+      {
+        allowFileAccess: true,
+      },
     )
   } else {
     await session.defaultSession.loadExtension(

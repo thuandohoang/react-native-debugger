@@ -32,9 +32,12 @@ export default function getRNDebuggerFetchPolyfills() {
       '[object Float64Array]',
     ]
 
-    isArrayBufferView = ArrayBuffer.isView
-      || function (obj) {
-        return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+    isArrayBufferView =
+      ArrayBuffer.isView ||
+      function (obj) {
+        return (
+          obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+        )
       }
   }
 
@@ -231,15 +234,18 @@ export default function getRNDebuggerFetchPolyfills() {
         this._bodyBlob = body
       } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
         this._bodyFormData = body
-      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+      } else if (
+        support.searchParams &&
+        URLSearchParams.prototype.isPrototypeOf(body)
+      ) {
         this._bodyText = body.toString()
       } else if (support.arrayBuffer && support.blob && isDataView(body)) {
         this._bodyArrayBuffer = bufferClone(body.buffer)
         // IE 10-11 can't handle a DataView body.
         this._bodyInit = new Blob([this._bodyArrayBuffer])
       } else if (
-        support.arrayBuffer
-        && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))
+        support.arrayBuffer &&
+        (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))
       ) {
         this._bodyArrayBuffer = bufferClone(body)
       } else {
@@ -253,8 +259,14 @@ export default function getRNDebuggerFetchPolyfills() {
           this.headers.set('content-type', 'text/plain;charset=UTF-8')
         } else if (this._bodyBlob && this._bodyBlob.type) {
           this.headers.set('content-type', this._bodyBlob.type)
-        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
-          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+        } else if (
+          support.searchParams &&
+          URLSearchParams.prototype.isPrototypeOf(body)
+        ) {
+          this.headers.set(
+            'content-type',
+            'application/x-www-form-urlencoded;charset=UTF-8',
+          )
         }
       }
     }
@@ -268,9 +280,11 @@ export default function getRNDebuggerFetchPolyfills() {
 
         if (this._bodyBlob) {
           return Promise.resolve(this._bodyBlob)
-        } if (this._bodyArrayBuffer) {
+        }
+        if (this._bodyArrayBuffer) {
           return Promise.resolve(new Blob([this._bodyArrayBuffer]))
-        } if (this._bodyFormData) {
+        }
+        if (this._bodyFormData) {
           throw new Error('could not read FormData body as blob')
         } else {
           return Promise.resolve(new Blob([this._bodyText]))
@@ -293,9 +307,11 @@ export default function getRNDebuggerFetchPolyfills() {
 
       if (this._bodyBlob) {
         return readBlobAsText(this._bodyBlob)
-      } if (this._bodyArrayBuffer) {
+      }
+      if (this._bodyArrayBuffer) {
         return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
-      } if (this._bodyFormData) {
+      }
+      if (this._bodyFormData) {
         throw new Error('could not read FormData body as text')
       } else {
         return Promise.resolve(this._bodyText)
@@ -461,7 +477,10 @@ export default function getRNDebuggerFetchPolyfills() {
           statusText: xhr.statusText,
           headers: parseHeaders(xhr.getAllResponseHeaders() || ''),
         }
-        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL')
+        options.url =
+          'responseURL' in xhr
+            ? xhr.responseURL
+            : options.headers.get('X-Request-URL')
         const body = 'response' in xhr ? xhr.response : xhr.responseText
         resolve(new Response(body, options))
       }
@@ -505,7 +524,9 @@ export default function getRNDebuggerFetchPolyfills() {
         }
       }
 
-      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+      xhr.send(
+        typeof request._bodyInit === 'undefined' ? null : request._bodyInit,
+      )
     })
   }
 

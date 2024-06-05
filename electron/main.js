@@ -1,7 +1,5 @@
 import path from 'path'
-import {
-  app, ipcMain, session, BrowserWindow, Menu,
-} from 'electron'
+import { app, ipcMain, session, BrowserWindow, Menu } from 'electron'
 import { initialize } from '@electron/remote/main'
 import normalizeHeaderCase from 'header-case-normalizer'
 import installExtensions from './extensions'
@@ -29,9 +27,10 @@ const findWindow = async (_, port) => {
     const acc = await promise
     if (acc) return acc
 
-    const { isWorkerRunning, isPortSettingRequired, location } = await checkWindowInfo(win)
-    return (!isWorkerRunning || location.port === port)
-      && !isPortSettingRequired
+    const { isWorkerRunning, isPortSettingRequired, location } =
+      await checkWindowInfo(win)
+    return (!isWorkerRunning || location.port === port) &&
+      !isPortSettingRequired
       ? win
       : null
   }, Promise.resolve(null))
